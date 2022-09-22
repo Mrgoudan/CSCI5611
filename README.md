@@ -1,17 +1,17 @@
 # CSCi5611
-Mouse follow
-![Alt Text](resource/mousefollow.gif)
+Mouse follow <br />
+![Alt Text](resource/mousefollow.gif) <br />
 
-particle system
-![Alt Text](resource/sps1.png)
-![Alt Text](resource/sps2.png)
+particle system <br />
+![Alt Text](resource/sps1.png) <br />
+![Alt Text](resource/sps2.png) <br />
 
-TTC force 
-![Alt Text](resource/TTC.gif)
+TTC force  <br />
+![Alt Text](resource/TTC.gif) <br />
 
-DFS
-![Alt Text](resource/DFS.png)
+DFS <br />
+![Alt Text](resource/DFS.png) <br />
 
-PRM
+PRM <br />
 
-![Alt Text](resource/PRM.gif)
+![Alt Text](resource/PRM.gif) <br />
