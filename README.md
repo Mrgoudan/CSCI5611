@@ -3,8 +3,8 @@ Mouse follow <br />
 ![Alt Text](resource/mousefollow.gif) <br />
 
 particle system <br />
-![Alt Text](resource/sps1.png=200x200) <br />
-![Alt Text](resource/sps2.png=200x200) <br />
+<img src="resource/sps1.png" alt="drawing" width="50%"/> <br />
+<img src="resource/sps2.png" alt="drawing" width="50%"/> <br />
 
 TTC force  <br />
 ![Alt Text](resource/TTC.gif) <br />
