@@ -14,4 +14,4 @@ DFS <br />
 
 PRM <br />
 
-![Alt Text](resource/PRM.gif) <br />
+![Alt Text](resource/PRM1.gif) <br />
