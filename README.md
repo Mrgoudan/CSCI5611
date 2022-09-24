@@ -11,6 +11,8 @@ TTC force  <br />
 
 DFS <br />
 ![Alt Text](resource/DFS.png) <br />
+BFS <br />
+![Alt Text](resource/BFS.png) <br />
 
 PRM <br />
 
