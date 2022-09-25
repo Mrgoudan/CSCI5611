@@ -82,65 +82,154 @@ ArrayList<Integer> planPath(Vec2 startPos, Vec2 goalPos, Vec2[] centers, float[]
   int startID = closestNode(startPos, nodePos, numNodes);
   int goalID = closestNode(goalPos, nodePos, numNodes);
   
-  path = runBFS(nodePos, numNodes, startID, goalID);
+  path = runAStar(nodePos, numNodes, startID, goalID);
+  println("path",path);
   
   return path;
 }
-
-//BFS (Breadth First Search)
-ArrayList<Integer> runBFS(Vec2[] nodePos, int numNodes, int startID, int goalID){
-  ArrayList<Integer> fringe = new ArrayList();  //New empty fringe
-  ArrayList<Integer> path = new ArrayList();
+int peek(ArrayList<Integer> openList, float[] fValue){
+  int minID = 0;
+  float minFValue = 99999;
+  
+  for(int i  = 0;i<openList.size();i++){
+    // println("openlist size",openList.get(i));
+    // println("peek value",openList, fValue[openList.get(i)]);
+    if(fValue[openList.get(i)]<minFValue){
+      minFValue = fValue[openList.get(i)];
+      minID =openList.get(i) ;
+    }
+  }
+  
+  // println(minID);
+  return minID;
+}
+ArrayList<Integer> runAStar(Vec2[] nodePos, int numNodes, int startID, int goalID){
+  ArrayList<Integer> closedList = new ArrayList();
+  ArrayList<Integer> openList = new ArrayList();
   for (int i = 0; i < numNodes; i++) { //Clear visit tags and parent pointers
     visited[i] = false;
     parent[i] = -1; //No parent yet
   }
-
-  //println("\nBeginning Search");
-  
+  float[] fValue = new float[numNodes]; 
+  float[] gValue = new float[numNodes];
+  fValue[startID] = 0+nodePos[startID].distanceTo(nodePos[goalID]);
+  gValue[startID] = 0;
   visited[startID] = true;
-  fringe.add(startID);
-  //println("Adding node", startID, "(start) to the fringe.");
-  //println(" Current Fringe: ", fringe);
-  
-  while (fringe.size() > 0){
-    int currentNode = fringe.get(0);
-    fringe.remove(0);
-    if (currentNode == goalID){
-      //println("Goal found!");
+  openList.add(startID);
+  // println("startID",startID);
+  while(!openList.isEmpty()){
+    int evaluate = peek(openList,fValue);
+    if(evaluate == goalID){
+      println("Goal Found");
       break;
     }
-    for (int i = 0; i < neighbors[currentNode].size(); i++){
-      int neighborNode = neighbors[currentNode].get(i);
-      if (!visited[neighborNode]){
-        visited[neighborNode] = true;
-        parent[neighborNode] = currentNode;
-        fringe.add(neighborNode);
-        //println("Added node", neighborNode, "to the fringe.");
-        //println(" Current Fringe: ", fringe);
+    for(int i = 0;i<neighbors[evaluate].size();i++){
+      
+      visited[neighbors[evaluate].get(i)] = true;
+      int node = neighbors[evaluate].get(i);
+      float totalWeight = gValue[evaluate]+nodePos[evaluate].distanceTo(nodePos[node]);
+      if(!openList.contains(node)&& !closedList.contains(node)){
+        parent[node] = evaluate;
+        gValue[node] = totalWeight;
+        fValue[node] = gValue[node] + nodePos[evaluate].distanceTo(nodePos[goalID]);
+        openList.add(node);
+      }else{
+          if(totalWeight<gValue[node]){
+            parent[node] = evaluate;
+            gValue[node] = totalWeight;
+            fValue[node] = gValue[node] + nodePos[evaluate].distanceTo(nodePos[goalID]);
+            if(closedList.contains(node)){
+              closedList.remove(closedList.indexOf(node));
+              openList.add(node);
+            }
+        }
       }
-    } 
-  }
-  
-  if (fringe.size() == 0){
-    //println("No Path");
-    path.add(0,-1);
-    return path;
-  }
+      
+      
+      }
+    // println(openList, evaluate);
+    openList.remove(openList.indexOf(evaluate));
+    closedList.add(evaluate);
+   }
     
-  //print("\nReverse path: ");
-  int prevNode = parent[goalID];
-  path.add(0,goalID);
-  //print(goalID, " ");
-  while (prevNode >= 0){
-    //print(prevNode," ");
-    path.add(0,prevNode);
-    prevNode = parent[prevNode];
-  }
-  //print("\n");
+
   
+  ArrayList<Integer> path = new ArrayList();
+  int goal = goalID;
+  while(true){
+    // println("goal",goal);
+    if(parent[goal]!=-1){
+      path.add(0,goal);
+    }else{
+      path.add(0,goal);
+      break;
+    }
+    
+    goal = parent[goal];
+
+  }
+  // println(startID,goalID);
+
+  // println(path);
+
   return path;
+  
 }
+
+//BFS (Breadth First Search)
+// ArrayList<Integer> runBFS(Vec2[] nodePos, int numNodes, int startID, int goalID){
+//   ArrayList<Integer> fringe = new ArrayList();  //New empty fringe
+//   ArrayList<Integer> path = new ArrayList();
+//   for (int i = 0; i < numNodes; i++) { //Clear visit tags and parent pointers
+//     visited[i] = false;
+//     parent[i] = -1; //No parent yet
+//   }
+
+//   //println("\nBeginning Search");
+  
+//   visited[startID] = true;
+//   fringe.add(startID);
+//   //println("Adding node", startID, "(start) to the fringe.");
+//   //println(" Current Fringe: ", fringe);
+  
+//   while (fringe.size() > 0){
+//     int currentNode = fringe.get(0);
+//     fringe.remove(0);
+//     if (currentNode == goalID){
+//       //println("Goal found!");
+//       break;
+//     }
+//     for (int i = 0; i < neighbors[currentNode].size(); i++){
+//       int neighborNode = neighbors[currentNode].get(i);
+//       if (!visited[neighborNode]){
+//         visited[neighborNode] = true;
+//         parent[neighborNode] = currentNode;
+//         fringe.add(neighborNode);
+//         //println("Added node", neighborNode, "to the fringe.");
+//         //println(" Current Fringe: ", fringe);
+//       }
+//     } 
+//   }
+  
+//   if (fringe.size() == 0){
+//     //println("No Path");
+//     path.add(0,-1);
+//     return path;
+//   }
+    
+//   //print("\nReverse path: ");
+//   int prevNode = parent[goalID];
+//   path.add(0,goalID);
+//   //print(goalID, " ");
+//   while (prevNode >= 0){
+//     //print(prevNode," ");
+//     path.add(0,prevNode);
+//     prevNode = parent[prevNode];
+//   }
+//   //print("\n");
+  
+//   return path;
+// }
 
 
 
