@@ -13,7 +13,7 @@ float agentRad = 30;
 //The agent goals
 //Vec2 goalPos;
 
-ArrayList<Vec2> path;
+ArrayList<Integer> path;
 
 int len;
 int i;
@@ -21,24 +21,21 @@ int i;
 
 
 void setup(){
-  placeRandomObstacles(numObstacles);
   size(850,650);
   //size(850,650,P3D); //Smoother
   surface.setTitle("2D simulation");
   //Set initial agent positions and goals
-  path = new ArrayList();
   agentVel = new Vec2(0.0,0.0);
   agentPos= new Vec2(400,610);
   
   goalPos = new Vec2(200,420);
-  point1 = new Vec2(300,300);
-  point2 = new Vec2(250,300);
+
+  placeRandomObstacles(numObstacles);
+
+  generateRandomNodes(numNodes, circlePos, circleRad);
+  connectNeighbors(circlePos, circleRad, numObstacles, nodePos, numNodes);
+  path = planPath(agentPos, goalPos, circlePos, circleRad, numObstacles, nodePos, numNodes);
   
-  path.add(point1);
-  path.add(point2);
-  path.add(goalPos);
-
-
   len = path.size();
   i = 0;
   //Set initial velocities to cary agents towards their goals
@@ -53,7 +50,8 @@ void setup(){
 //Update agent positions & velocities based acceleration
 void moveAgent(float dt){
   //Compute accelerations for every agents
-  Vec2 goal = path.get(i);
+  int goalNode = path.get(i);
+  Vec2 goal = nodePos[goalNode];
   Vec2 dir = goal.minus(agentPos);
   if(dir.length() < agentSpeed*dt){
     agentVel = new Vec2(0,0);
@@ -63,17 +61,7 @@ void moveAgent(float dt){
     dir.normalize();
     agentVel = dir.times(agentSpeed*dt);
   }
-
   agentPos.add(agentVel);
-
-  // for (int i = 0; i < numAgents; i++){
-  //   agentAcc[i] = computeAgentForces(i);
-  // }
-  // //Update position and velocity using (Eulerian) numerical integration
-  // for (int i = 0; i < numAgents; i++){
-  //   agentVel[i].add(agentAcc[i].times(dt));
-  //   agentPos[i].add(agentVel[i].times(dt));
-  // }
 }
 
 boolean paused = true;
