@@ -26,7 +26,7 @@ void setup(){
   //size(850,650,P3D); //Smoother
   surface.setTitle("2D simulation");
   //Set initial agent positions and goals
-  path = new ArrayList<>():
+  path = new ArrayList();
   agentVel = new Vec2(0.0,0.0);
   agentPos= new Vec2(400,610);
   
