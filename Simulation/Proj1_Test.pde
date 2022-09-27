@@ -11,129 +11,99 @@
 // Pressing 'r' will randomize the obstacles and re-run the tests
 
 //Change the below parameters to change the scenario/roadmap size
-int numObstacles = 100;
-int numNodes  = 100;
+// int numObstacles = 100;
+// int numNodes  = 100; 
+  
+// //A list of circle obstacles
+// static int maxNumObstacles = 1000;
+// Vec2 circlePos[] = new Vec2[maxNumObstacles]; //Circle positions
+// float circleRad[] = new float[maxNumObstacles];  //Circle radii
+
+// Vec2 startPos = new Vec2(100,500);
+// Vec2 goalPos = new Vec2(500,200);
+
+// static int maxNumNodes = 1000;
+// Vec2[] nodePos = new Vec2[maxNumNodes];
+
+// //Generate non-colliding PRM nodes
+
+
+// ArrayList<Integer> curPath;
+
+// int strokeWidth = 2;
+// //void setup(){
+// //  size(1024,768);
+// //  testPRM();
+// //}
+
+// int numCollisions;
+// float pathLength;
+// boolean reachedGoal;
+// void pathQuality(){
+//   Vec2 dir;
+//   hitInfo hit;
+//   float segmentLength;
+//   numCollisions = 9999; pathLength = 9999;
+//   if (curPath.size() == 1 && curPath.get(0) == -1) return; //No path found  
+  
+//   pathLength = 0; numCollisions = 0;
+  
+//   if (curPath.size() == 0 ){ //Path found with no nodes (direct start-to-goal path)
+//     segmentLength = startPos.distanceTo(goalPos);
+//     pathLength += segmentLength;
+//     dir = goalPos.minus(startPos).normalized();
+//     hit = rayCircleListIntersect(circlePos, circleRad, numObstacles, startPos, dir, segmentLength);
+//     if (hit.hit) numCollisions += 1;
+//     return;
+//   }
+  
+//   segmentLength = startPos.distanceTo(nodePos[curPath.get(0)]);
+//   pathLength += segmentLength;
+//   dir = nodePos[curPath.get(0)].minus(startPos).normalized();
+//   hit = rayCircleListIntersect(circlePos, circleRad, numObstacles, startPos, dir, segmentLength);
+//   if (hit.hit) numCollisions += 1;
   
   
-//A list of circle obstacles
-static int maxNumObstacles = 1000;
-Vec2 circlePos[] = new Vec2[maxNumObstacles]; //Circle positions
-float circleRad[] = new float[maxNumObstacles];  //Circle radii
-
-Vec2 startPos = new Vec2(100,500);
-Vec2 goalPos = new Vec2(500,200);
-
-static int maxNumNodes = 1000;
-Vec2[] nodePos = new Vec2[maxNumNodes];
-
-//Generate non-colliding PRM nodes
-void generateRandomNodes(int numNodes, Vec2[] circleCenters, float[] circleRadii){
-  for (int i = 0; i < numNodes; i++){
-    Vec2 randPos = new Vec2(random(width),random(height));
-    boolean insideAnyCircle = pointInCircleList(circleCenters,circleRadii,numObstacles,randPos,2);
-    //boolean insideBox = pointInBox(boxTopLeft, boxW, boxH, randPos);
-    while (insideAnyCircle){
-      randPos = new Vec2(random(width),random(height));
-      insideAnyCircle = pointInCircleList(circleCenters,circleRadii,numObstacles,randPos,2);
-      //insideBox = pointInBox(boxTopLeft, boxW, boxH, randPos);
-    }
-    nodePos[i] = randPos;
-  }
-}
-
-void placeRandomObstacles(int numObstacles){
-  //Initial obstacle position
-  for (int i = 0; i < numObstacles; i++){
-    circlePos[i] = new Vec2(random(50,950),random(50,700));
-    circleRad[i] = (10+40*pow(random(1),3));
-  }
-  circleRad[0] = 30; //Make the first obstacle big
-}
-
-ArrayList<Integer> curPath;
-
-int strokeWidth = 2;
-//void setup(){
-//  size(1024,768);
-//  testPRM();
-//}
-
-int numCollisions;
-float pathLength;
-boolean reachedGoal;
-void pathQuality(){
-  Vec2 dir;
-  hitInfo hit;
-  float segmentLength;
-  numCollisions = 9999; pathLength = 9999;
-  if (curPath.size() == 1 && curPath.get(0) == -1) return; //No path found  
-  
-  pathLength = 0; numCollisions = 0;
-  
-  if (curPath.size() == 0 ){ //Path found with no nodes (direct start-to-goal path)
-    segmentLength = startPos.distanceTo(goalPos);
-    pathLength += segmentLength;
-    dir = goalPos.minus(startPos).normalized();
-    hit = rayCircleListIntersect(circlePos, circleRad, numObstacles, startPos, dir, segmentLength);
-    if (hit.hit) numCollisions += 1;
-    return;
-  }
-  
-  segmentLength = startPos.distanceTo(nodePos[curPath.get(0)]);
-  pathLength += segmentLength;
-  dir = nodePos[curPath.get(0)].minus(startPos).normalized();
-  hit = rayCircleListIntersect(circlePos, circleRad, numObstacles, startPos, dir, segmentLength);
-  if (hit.hit) numCollisions += 1;
-  
-  
-  for (int i = 0; i < curPath.size()-1; i++){
-    int curNode = curPath.get(i);
-    int nextNode = curPath.get(i+1);
-    segmentLength = nodePos[curNode].distanceTo(nodePos[nextNode]);
-    pathLength += segmentLength;
+//   for (int i = 0; i < curPath.size()-1; i++){
+//     int curNode = curPath.get(i);
+//     int nextNode = curPath.get(i+1);
+//     segmentLength = nodePos[curNode].distanceTo(nodePos[nextNode]);
+//     pathLength += segmentLength;
     
-    dir = nodePos[nextNode].minus(nodePos[curNode]).normalized();
-    hit = rayCircleListIntersect(circlePos, circleRad, numObstacles, nodePos[curNode], dir, segmentLength);
-    if (hit.hit) numCollisions += 1;
-  }
+//     dir = nodePos[nextNode].minus(nodePos[curNode]).normalized();
+//     hit = rayCircleListIntersect(circlePos, circleRad, numObstacles, nodePos[curNode], dir, segmentLength);
+//     if (hit.hit) numCollisions += 1;
+//   }
   
-  int lastNode = curPath.get(curPath.size()-1);
-  segmentLength = nodePos[lastNode].distanceTo(goalPos);
-  pathLength += segmentLength;
-  dir = goalPos.minus(nodePos[lastNode]).normalized();
-  hit = rayCircleListIntersect(circlePos, circleRad, numObstacles, nodePos[lastNode], dir, segmentLength);
-  if (hit.hit) numCollisions += 1;
-}
+//   int lastNode = curPath.get(curPath.size()-1);
+//   segmentLength = nodePos[lastNode].distanceTo(goalPos);
+//   pathLength += segmentLength;
+//   dir = goalPos.minus(nodePos[lastNode]).normalized();
+//   hit = rayCircleListIntersect(circlePos, circleRad, numObstacles, nodePos[lastNode], dir, segmentLength);
+//   if (hit.hit) numCollisions += 1;
+// }
 
-Vec2 sampleFreePos(){
-  Vec2 randPos = new Vec2(random(width),random(height));
-  boolean insideAnyCircle = pointInCircleList(circlePos,circleRad,numObstacles,randPos,2);
-  while (insideAnyCircle){
-    randPos = new Vec2(random(width),random(height));
-    insideAnyCircle = pointInCircleList(circlePos,circleRad,numObstacles,randPos,2);
-  }
-  return randPos;
-}
 
-void testPRM(){
-  long startTime, endTime;
-  
-  placeRandomObstacles(numObstacles);
-  
-  startPos = sampleFreePos();
-  goalPos = sampleFreePos();
 
-  generateRandomNodes(numNodes, circlePos, circleRad);
-  connectNeighbors(circlePos, circleRad, numObstacles, nodePos, numNodes);
+// void testPRM(){
+//   long startTime, endTime;
   
-  startTime = System.nanoTime();
-  curPath = planPath(startPos, goalPos, circlePos, circleRad, numObstacles, nodePos, numNodes);
-  endTime = System.nanoTime();
-  pathQuality();
+//   placeRandomObstacles(numObstacles);
   
-  println("Nodes:", numNodes," Obstacles:", numObstacles," Time (us):", int((endTime-startTime)/1000),
-          " Path Len:", pathLength, " Path Segment:", curPath.size()+1,  " Num Collisions:", numCollisions);
-}
+//   startPos = sampleFreePos();
+//   goalPos = sampleFreePos();
+
+//   generateRandomNodes(numNodes, circlePos, circleRad);
+//   connectNeighbors(circlePos, circleRad, numObstacles, nodePos, numNodes);
+  
+//   startTime = System.nanoTime();
+//   curPath = planPath(startPos, goalPos, circlePos, circleRad, numObstacles, nodePos, numNodes);
+//   endTime = System.nanoTime();
+//   pathQuality();
+  
+//   println("Nodes:", numNodes," Obstacles:", numObstacles," Time (us):", int((endTime-startTime)/1000),
+//           " Path Len:", pathLength, " Path Segment:", curPath.size()+1,  " Num Collisions:", numCollisions);
+// }
 
 //void draw(){
 //  //println("FrameRate:",frameRate);
@@ -197,7 +167,7 @@ void testPRM(){
   
 //}
 
-boolean shiftDown = false;
+// boolean shiftDown = false;
 //void keyPressed(){
 //  if (key == 'r'){
 //    testPRM();
