@@ -31,7 +31,7 @@ Vec2 agentPos;
 Vec2 agentVel;
 Vec2 point1;
 Vec2 point2;
-float agentRad = 30;
+float agentRad = 20;
 
 // Vec2 agentAcc;
 
