@@ -77,7 +77,7 @@ int closestNode(Vec2 point, Vec2[] nodePos, int numNodes){
 }
 
 ArrayList<Integer> planPath(Vec2 startPos, Vec2 goalPos, Vec2[] centers, float[] radii, int numObstacles, Vec2[] nodePos, int numNodes){
-  ArrayList<Integer> path = new ArrayList();
+ArrayList<Integer> path = new ArrayList();
   
   int startID = closestNode(startPos, nodePos, numNodes);
   int goalID = closestNode(goalPos, nodePos, numNodes);

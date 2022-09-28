@@ -13,37 +13,35 @@ static int maxNumNodes = 1000;
 Vec2[] nodePos = new Vec2[maxNumNodes];
 
 
-ArrayList<Integer> curPath;
-
+ArrayList<Vec2> path;
+ArrayList<Integer> nodes;
 int strokeWidth = 2;
-//void setup(){
-//  size(1024,768);
-//  testPRM();
-//}
 
 int numCollisions;
 float pathLength;
 boolean reachedGoal;
 float agentSpeed = 100;
 
-//The agent states
+
 Vec2 agentPos;
 Vec2 agentVel;
-Vec2 point1;
-Vec2 point2;
 float agentRad = 20;
 
-// Vec2 agentAcc;
 
-//The agent goals
-//Vec2 goalPos;
 
-ArrayList<Integer> path;
 
 int len;
 int i;
 
 
+// Vec2 agentAcc;
+//The agent states
+//The agent goals
+//Vec2 goalPos;
+//void setup(){
+//  size(1024,768);
+//  testPRM();
+//}
 
 void setup(){
   size(850,650);
@@ -60,8 +58,14 @@ void setup(){
   goalPos = sampleFreePos();
   generateRandomNodes(numNodes, circlePos, circleRad);
   connectNeighbors(circlePos, circleRad, numObstacles, nodePos, numNodes);
-  path = planPath(agentPos, goalPos, circlePos, circleRad, numObstacles, nodePos, numNodes);
-
+  
+  nodes = planPath(agentPos, goalPos, circlePos, circleRad, numObstacles, nodePos, numNodes);
+  path = new ArrayList();
+  for(int j : nodes){
+    path.add(new Vec2(nodePos[j].x, nodePos[j].y));
+  }
+  
+  path.add(goalPos);
   len = path.size();
   i = 0;
   //Set initial velocities to cary agents towards their goals
@@ -97,12 +101,19 @@ void placeRandomObstacles(int numObstacles){
 //Update agent positions & velocities based acceleration
 void moveAgent(float dt){
   //Compute accelerations for every agents
-  int goalNode = path.get(i);
-  Vec2 goal = new Vec2(nodePos[goalNode].x, nodePos[goalNode].y);
-  Vec2 dir = goal.minus(agentPos);
+  Vec2 next = path.get(i);
+  Vec2 dir;
+
+  dir = next.minus(agentPos);
+  float dist = agentPos.distanceTo(next);
+  hitInfo shortcut = rayCircleListIntersect(circlePos, circleRad, numObstacles, agentPos, dir.normalized(), dist);
+  if(!shortcut.hit && i < len - 1){
+    i++;
+    return;
+  }
   if(dir.length() < agentSpeed*dt){
     agentVel = new Vec2(0,0);
-    agentPos = goal;
+    agentPos = next;
     if(i < len - 1) i++;
   }else{
     dir.normalize();
