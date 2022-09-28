@@ -25,7 +25,7 @@ float agentSpeed = 100;
 
 Vec2 agentPos;
 Vec2 agentVel;
-float agentRad = 20;
+float agentRad = 10;
 
 
 
@@ -54,12 +54,12 @@ void runSimulation(){
   goalPos = new Vec2(200,420);
 
   placeRandomObstacles(numObstacles);
-  //agentVel = sampleFreePos();
   agentPos= sampleFreePos();
+  startPos = new Vec2(agentPos.x, agentPos.y);
   goalPos = sampleFreePos();
   generateRandomNodes(numNodes, circlePos, circleRad);
   connectNeighbors(circlePos, circleRad, numObstacles, nodePos, numNodes);
-  
+
   nodes = planPath(agentPos, goalPos, circlePos, circleRad, numObstacles, nodePos, numNodes);
   path = new ArrayList();
   for(int j : nodes){
@@ -95,7 +95,7 @@ void placeRandomObstacles(int numObstacles){
   //Initial obstacle position
   for (int i = 0; i < numObstacles; i++){
     circlePos[i] = new Vec2(random(50,950),random(50,700));
-    circleRad[i] = (10+40*pow(random(1),3));
+    circleRad[i] = (20+40*pow(random(1),3));
   }
   circleRad[0] = 30; //Make the first obstacle big
 }
@@ -137,10 +137,11 @@ boolean paused = true;
 void draw(){
   background(255,255,255); //White background
   stroke(0,0,0);
+  strokeWeight(1);
   fill(255,255,255);
-   for (int i = 0; i < numObstacles; i++){
+  for (int i = 0; i < numObstacles; i++){
     Vec2 c = circlePos[i];
-    float r = circleRad[i];
+    float r = circleRad[i] - agentRad;
     circle(c.x,c.y,r*2);
   }
 
@@ -157,7 +158,7 @@ void draw(){
   //Draw the green agents
   fill(20,200,150);
 
-  circle(agentPos.x, agentPos.y, (agentRad - 10)*2);  //No.4 smaller radius
+  circle(agentPos.x, agentPos.y, agentRad*2);  //No.4 smaller radius
    //Draw PRM Nodes
   fill(0);
   for (int i = 0; i < numNodes; i++){
@@ -172,6 +173,21 @@ void draw(){
       line(nodePos[i].x,nodePos[i].y,nodePos[j].x,nodePos[j].y);
     }
   }
+
+  stroke(20,255,40);
+  strokeWeight(5);
+  if (nodes.size() == 0){
+    line(startPos.x,startPos.y,goalPos.x,goalPos.y);
+    return;
+  }
+  line(startPos.x,startPos.y,nodePos[nodes.get(0)].x,nodePos[nodes.get(0)].y);
+  for (int i = 0; i < nodes.size()-1; i++){
+    int curNode = nodes.get(i);
+    int nextNode = nodes.get(i+1);
+    line(nodePos[curNode].x,nodePos[curNode].y,nodePos[nextNode].x,nodePos[nextNode].y);
+  }
+  line(goalPos.x,goalPos.y,nodePos[nodes.get(nodes.size()-1)].x,nodePos[nodes.get(nodes.size()-1)].y);
+  
 }
 
 //Pause/unpause the simulation

@@ -62,6 +62,40 @@ void connectNeighbors(Vec2[] centers, float[] radii, int numObstacles, Vec2[] no
   }
 }
 
+// int connectStartGoalNeighbors(Vec2[] centers, float[] radii, int numObstacles, Vec2[] nodePos, int numNodes,Vec2 start,Vec2 goal){
+  // int sID = numNodes;
+  // nodePos[numNodes] = start;
+  // neighbors[numNodes] = new ArrayList<Integer>();  //Clear neighbors list
+
+  // numNodes = numNodes+1;
+  // nodePos[numNodes] = goal;
+  // neighbors[numNodes] = new ArrayList<Integer>();  //Clear neighbors list
+
+  // numNodes = numNodes+1;
+
+
+  // for (int i = numNodes-2; i < numNodes; i++){
+  //   // neighbors[i] = new ArrayList<Integer>();  //Clear neighbors list
+  //   for (int j = 0; j < numNodes; j++){
+  //     if (i == j) continue; //don't connect to myself 
+  //     Vec2 dir = nodePos[j].minus(nodePos[i]).normalized();
+  //     // Vec2 dir1 = nodePos[i].minus(nodePos[j]).normalized();
+  //     float distBetween = nodePos[i].distanceTo(nodePos[j]);
+  //     hitInfo circleListCheck = rayCircleListIntersect(centers, radii, numObstacles, nodePos[i], dir, distBetween);
+  //     // hitInfo circleListCheck1 = rayCircleListIntersect(centers, radii, numObstacles, nodePos[i], dir, distBetween);
+
+  //     if (!circleListCheck.hit&& distBetween<200){
+  //       neighbors[i].add(j);
+  //       neighbors[j].add(i);
+  //       println(neighbors[j],neighbors[i]);
+  //     }
+  //   }
+  // }
+
+//   return sID;
+// }
+
+
 //This is probably a bad idea and you shouldn't use it...
 int closestNode(Vec2 point, Vec2[] nodePos, int numNodes){
   int closestID = -1;
@@ -76,17 +110,61 @@ int closestNode(Vec2 point, Vec2[] nodePos, int numNodes){
   return closestID;
 }
 
+int closestStartNode(Vec2 start,Vec2 goal ,Vec2[] nodePos, int numNodes,Vec2[] centers, float[] radii, int numObstacles){
+  // int closestID = -1;
+  // float minDist = 999999;
+  float minDist = 99999999;
+  float minDIstToGoal = 99999999;
+  int closestID = -1;
+  for (int i = 0; i < numNodes; i++){
+    float dist = nodePos[i].distanceTo(start);
+    float distToGoal = nodePos[i].distanceTo(goal);
+    
+    Vec2 dir = nodePos[i].minus(start).normalized();
+    float distBetween = nodePos[i].distanceTo(start);
+    hitInfo circleListCheck = rayCircleListIntersect(centers, radii, numObstacles, start, dir, distBetween);
+    if(!circleListCheck.hit &&dist+distToGoal<minDist+minDIstToGoal){
+      println(dist+distToGoal,minDist+minDIstToGoal);
+      closestID = i;
+      minDist = dist;
+      minDIstToGoal = distToGoal;
+    }
+  }
+  return closestID;
+}
+int closestGoalNode(Vec2 start,Vec2 goal ,Vec2[] nodePos, int numNodes,Vec2[] centers, float[] radii, int numObstacles){
+  // int closestID = -1;
+  // float minDist = 999999;
+  float minDist = 99999999;
+  float minDIstToGoal = 99999999;
+  int closestID = -1;
+  for (int i = 0; i < numNodes; i++){
+    float dist = nodePos[i].distanceTo(goal);
+    float distToGoal = nodePos[i].distanceTo(start);
+    Vec2 dir = nodePos[i].minus(goal).normalized();
+    float distBetween = nodePos[i].distanceTo(goal);
+    hitInfo circleListCheck = rayCircleListIntersect(centers, radii, numObstacles, goal, dir, distBetween);
+    if(!circleListCheck.hit &&dist+distToGoal<minDist+minDIstToGoal){
+      closestID = i;
+      minDist = dist;
+      minDIstToGoal = distToGoal;
+    }
+  }
+  return closestID;
+}
+
 ArrayList<Integer> planPath(Vec2 startPos, Vec2 goalPos, Vec2[] centers, float[] radii, int numObstacles, Vec2[] nodePos, int numNodes){
-ArrayList<Integer> path = new ArrayList();
+  ArrayList<Integer> path = new ArrayList();
   
-  int startID = closestNode(startPos, nodePos, numNodes);
-  int goalID = closestNode(goalPos, nodePos, numNodes);
+  int startID = closestStartNode(startPos,goalPos, nodePos, numNodes,centers,radii,numObstacles);
+  int goalID = closestGoalNode(startPos,goalPos, nodePos, numNodes,centers,radii,numObstacles);
   
   path = runAStar(nodePos, numNodes, startID, goalID);
   println("path",path);
   
   return path;
 }
+
 int peek(ArrayList<Integer> openList, float[] fValue){
   int minID = 0;
   float minFValue = 99999;
@@ -124,7 +202,6 @@ ArrayList<Integer> runAStar(Vec2[] nodePos, int numNodes, int startID, int goalI
       break;
     }
     for(int i = 0;i<neighbors[evaluate].size();i++){
-      
       visited[neighbors[evaluate].get(i)] = true;
       int node = neighbors[evaluate].get(i);
       float totalWeight = gValue[evaluate]+nodePos[evaluate].distanceTo(nodePos[node]);
@@ -143,17 +220,12 @@ ArrayList<Integer> runAStar(Vec2[] nodePos, int numNodes, int startID, int goalI
               openList.add(node);
             }
         }
-      }
-      
-      
-      }
+      }  
+    }
     // println(openList, evaluate);
     openList.remove(openList.indexOf(evaluate));
     closedList.add(evaluate);
    }
-    
-
-  
   ArrayList<Integer> path = new ArrayList();
   int goal = goalID;
   while(true){
@@ -314,3 +386,103 @@ hitInfo rayCircleListIntersect(Vec2[] centers, float[] radii,  int numObstacles,
   }
   return hit;
 }
+
+
+//======================Vector Library=========================//
+//CSCI 5611 Vector 2 Library [Example]
+// Stephen J. Guy <sjguy@umn.edu>
+
+//public class Vec2 {
+//  public float x, y;
+  
+//  public Vec2(float x, float y){
+//    this.x = x;
+//    this.y = y;
+//  }
+  
+//  public String toString(){
+//    return "(" + x+ "," + y +")";
+//  }
+  
+//  public float length(){
+//    return sqrt(x*x+y*y);
+//  }
+  
+//  public float lengthSqr(){
+//    return x*x+y*y;
+//  }
+  
+//  public Vec2 plus(Vec2 rhs){
+//    return new Vec2(x+rhs.x, y+rhs.y);
+//  }
+  
+//  public void add(Vec2 rhs){
+//    x += rhs.x;
+//    y += rhs.y;
+//  }
+  
+//  public Vec2 minus(Vec2 rhs){
+//    return new Vec2(x-rhs.x, y-rhs.y);
+//  }
+  
+//  public void subtract(Vec2 rhs){
+//    x -= rhs.x;
+//    y -= rhs.y;
+//  }
+  
+//  public Vec2 times(float rhs){
+//    return new Vec2(x*rhs, y*rhs);
+//  }
+  
+//  public void mul(float rhs){
+//    x *= rhs;
+//    y *= rhs;
+//  }
+  
+//  public void clampToLength(float maxL){
+//    float magnitude = sqrt(x*x + y*y);
+//    if (magnitude > maxL){
+//      x *= maxL/magnitude;
+//      y *= maxL/magnitude;
+//    }
+//  }
+  
+//  public void setToLength(float newL){
+//    float magnitude = sqrt(x*x + y*y);
+//    x *= newL/magnitude;
+//    y *= newL/magnitude;
+//  }
+  
+//  public void normalize(){
+//    float magnitude = sqrt(x*x + y*y);
+//    x /= magnitude;
+//    y /= magnitude;
+//  }
+  
+//  public Vec2 normalized(){
+//    float magnitude = sqrt(x*x + y*y);
+//    return new Vec2(x/magnitude, y/magnitude);
+//  }
+  
+//  public float distanceTo(Vec2 rhs){
+//    float dx = rhs.x - x;
+//    float dy = rhs.y - y;
+//    return sqrt(dx*dx + dy*dy);
+//  }
+//}
+
+//Vec2 interpolate(Vec2 a, Vec2 b, float t){
+//  return a.plus((b.minus(a)).times(t));
+//}
+
+//float interpolate(float a, float b, float t){
+//  return a + ((b-a)*t);
+//}
+
+//float dot(Vec2 a, Vec2 b){
+//  return a.x*b.x + a.y*b.y;
+//}
+
+//Vec2 projAB(Vec2 a, Vec2 b){
+//  return b.times(a.x*b.x + a.y*b.y);
+//}
