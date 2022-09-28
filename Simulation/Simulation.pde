@@ -108,10 +108,11 @@ void moveAgent(float dt){
 
   dir = next.minus(agentPos);
   
-  float dist = next.distanceTo(agentPos);
+  //shortcut design
   if(i < len - 1){
     Vec2 node2 = path.get(i + 1);
     Vec2 nextdir = node2.minus(agentPos).normalized();
+    float dist = node2.distanceTo(agentPos);
     hitInfo shortcut = rayCircleListIntersect(circlePos, circleRad, numObstacles, agentPos, nextdir, dist);
     if(!shortcut.hit){
       i++;
