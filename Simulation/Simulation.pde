@@ -47,9 +47,10 @@ void setup(){
   size(850,650);
   //size(850,650,P3D); //Smoother
   surface.setTitle("2D simulation");
+  runSimulation();
   //Set initial agent positions and goals
-
-  
+}
+void runSimulation(){
   goalPos = new Vec2(200,420);
 
   placeRandomObstacles(numObstacles);
@@ -68,11 +69,12 @@ void setup(){
   path.add(goalPos);
   len = path.size();
   i = 0;
+}
+  
   //Set initial velocities to cary agents towards their goals
     // agentVel[i] = goalPos[i].minus(agentPos[i]);
     // agentVel[i].setToLength(goalSpeed);
 
-}
 
 
 void generateRandomNodes(int numNodes, Vec2[] circleCenters, float[] circleRadii){
@@ -105,12 +107,20 @@ void moveAgent(float dt){
   Vec2 dir;
 
   dir = next.minus(agentPos);
-  float dist = agentPos.distanceTo(next);
-  hitInfo shortcut = rayCircleListIntersect(circlePos, circleRad, numObstacles, agentPos, dir.normalized(), dist);
-  if(!shortcut.hit && i < len - 1){
-    i++;
-    return;
+  
+  float dist = next.distanceTo(agentPos);
+  if(i < len - 1){
+    Vec2 node2 = path.get(i + 1);
+    Vec2 nextdir = node2.minus(agentPos).normalized();
+    hitInfo shortcut = rayCircleListIntersect(circlePos, circleRad, numObstacles, agentPos, nextdir, dist);
+    if(!shortcut.hit){
+      i++;
+      print("used shortcut");
+      return;
+    }    
   }
+  
+
   if(dir.length() < agentSpeed*dt){
     agentVel = new Vec2(0,0);
     agentPos = next;
@@ -165,7 +175,13 @@ void draw(){
 
 //Pause/unpause the simulation
 void keyPressed(){
-  if (key == ' ') paused = !paused;
+  if (key == ' ') {
+    paused = !paused;
+  }
+  if (key == 'r'){
+    runSimulation();
+    return;
+  }
 }
 
 Vec2 sampleFreePos(){
@@ -179,24 +195,24 @@ Vec2 sampleFreePos(){
 }
 ///////////////////////
 
-float rayCircleIntersectTime(Vec2 center, float r, Vec2 l_start, Vec2 l_dir){
+// float rayCircleIntersectTime(Vec2 center, float r, Vec2 l_start, Vec2 l_dir){
  
-  //Compute displacement vector pointing from the start of the line segment to the center of the circle
-  Vec2 toCircle = center.minus(l_start);
+//   //Compute displacement vector pointing from the start of the line segment to the center of the circle
+//   Vec2 toCircle = center.minus(l_start);
  
-  //Solve quadratic equation for intersection point (in terms of l_dir and toCircle)
-  float a = l_dir.length()*l_dir.length();
-  float b = -2*dot(l_dir,toCircle); //-2*dot(l_dir,toCircle)
-  float c = toCircle.lengthSqr() - (r*r); //different of squared distances
+//   //Solve quadratic equation for intersection point (in terms of l_dir and toCircle)
+//   float a = l_dir.length()*l_dir.length();
+//   float b = -2*dot(l_dir,toCircle); //-2*dot(l_dir,toCircle)
+//   float c = toCircle.lengthSqr() - (r*r); //different of squared distances
  
-  float d = b*b - 4*a*c; //discriminant
+//   float d = b*b - 4*a*c; //discriminant
  
-  if (d >=0 ){
-    //If d is positive we know the line is colliding
-    float t = (-b - sqrt(d))/(2*a); //Optimization: we typically only need the first collision!
-    if (t >= 0) return t;
-    return -1;
-  }
+//   if (d >=0 ){
+//     //If d is positive we know the line is colliding
+//     float t = (-b - sqrt(d))/(2*a); //Optimization: we typically only need the first collision!
+//     if (t >= 0) return t;
+//     return -1;
+//   }
  
-  return -1; //We are not colliding, so there is no good t to return
-}
+//   return -1; //We are not colliding, so there is no good t to return
+// }
