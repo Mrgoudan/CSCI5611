@@ -1,4 +1,4 @@
-int numObstacles = 100;
+    int numObstacles = 100;
 int numNodes  = 100; 
   
 
@@ -34,7 +34,7 @@ int[] posPlace = new int[maxNumNodes];
 
 float k_goal = 5;  //TODO: Tune this parameter to agent stop naturally on their goals
 float k_avoid = 20;
-float goalSpeed = 50;
+float goalSpeed = 15;
 
 // Vec2[] agentPos = new Vec2[maxNumNodes];
 Vec2[] agentVel = new Vec2[maxNumNodes];
@@ -146,24 +146,20 @@ void moveAgent(float dt){
         return;
       }    
     }
-    if(path.get(j).length != 1){
-      agentAcc[j] = computeAgentForces(j);
-
-      if(dir.length() < goalSpeed*dt){
-        // agentVel = new Vec2(0,0);
-        startingPos[j] = next;
-        if(posPlace[j] < path.get(j).length - 1) posPlace[j] = posPlace[j]+1;
-      }else{
-        dir.normalize();
-        agentVel[j] = dir.times(goalSpeed*dt);
-        agentVel[j].add(agentAcc[j].times(dt).times(0.5));
-      }
-    startingPos[j].add(agentVel[j]);}
     
 
+    if(dir.length() < agentVel[j]*dt){
+      // agentVel = new Vec2(0,0);
+      startingPos[j] = next;
+      if(posPlace[j] < path.get(j).length - 1) posPlace[j] = posPlace[j]+1;
+    }else{
+      dir.normalize();
+      agentVel[j] = dir.times(agentVel[j]*dt);
+    }
+    startingPos[j].add(agentVel[j]);
   }
   // for (int i = 0; i < numOfAgents; i++){
-  //    
+  //     agentAcc[i] = computeAgentForces(i);
   //   }
   //   //Update position and velocity using (Eulerian) numerical integration
   //   for (int i = 0; i < numOfAgents; i++){
@@ -198,7 +194,6 @@ void draw(){
 
   for(int i = 0;i<numOfAgents;i++){
     fill(255,150,50);
-    println(goalPosition[i].x,goalPosition[i].y);
     rect(goalPosition[i].x-10, goalPosition[i].y-10, 20, 20);
     fill(20,200,150);    
     circle(startingPos[i].x, startingPos[i].y, agentRad*2); 
@@ -254,8 +249,6 @@ void keyPressed(){
     firstPos = new Vec2[maxNumNodes];
     numOfAgents = 0;
     posPlace = new int[maxNumNodes];
-    agentVel = new Vec2[maxNumNodes];
-    agentAcc = new Vec2[maxNumNodes];
     runSimulation();
     return;
   }
@@ -328,7 +321,7 @@ Vec2 computeAgentForces(int id){
   Vec2 acc = new Vec2(0,0);
   
   
-  Vec2 goalVel = path.get(id)[posPlace[id]].minus(startingPos[id]);
+  Vec2 goalVel = goalPosition[id].minus(startingPos[id]);
   if (goalVel.length() > goalSpeed) goalVel.setToLength(goalSpeed);
   Vec2 goalForce = (goalVel.minus(agentVel[id]));
   acc.add(goalForce.times(k_goal));
@@ -376,45 +369,45 @@ Vec2 computeAgentForces(int id){
       }
     }
   }
-  for (int j = 0; j < numCollisions; j++){
-    float ttc = computeTTC(startingPos[id],agentVel[id], agentRad, circlePos[j],new Vec2(0,0), circleRad[j]);
+  // for (int j = 0; j < numCollisions; j++){
+  //   float ttc = computeTTC(startingPos[id],agentVel[id], agentRad, circlePos[j],new Vec2(0,0), circleRad[j]);
     
-    Vec2 futurePos_id = startingPos[id].plus(agentVel[id].times((ttc+0.00001)));
-    Vec2 futurePos_j = circlePos[j].plus(new Vec2(0,0));
-    Vec2 avoidDir = futurePos_id.minus(futurePos_j).normalized();
-    Vec2 avoidForce = avoidDir.times(1/(ttc+0.0001));
-    //println(ttc, avoidForce.x, avoidForce.y);
-    if (ttc > 0){
-      acc.add(avoidForce.times(k_avoid));
-      if(acc.x<0){
-        acc.x = max(-100,acc.x);
-      }
-      if(acc.x>0){
-        acc.x = min(100,acc.x);
-      }
-      if(acc.y<0){
-        acc.y = max(-100,acc.y);
-      }
-      if(acc.y>0){
-        acc.y = min(100,acc.y);
-      }
-    }
-    if (ttc==0){
-      acc.add(avoidForce.times(k_avoid));
-      if(acc.x<0){
-        acc.x = max(-100,acc.x);
-      }
-      if(acc.x>0){
-        acc.x = min(100,acc.x);
-      }
-      if(acc.y<0){
-        acc.y = max(-100,acc.y);
-      }
-      if(acc.y>0){
-        acc.y = min(100,acc.y);
-      }
-    }
-  }
+  //   Vec2 futurePos_id = startingPos[id].plus(agentVel[id].times((ttc+0.00001)));
+  //   Vec2 futurePos_j = circlePos[j].plus(new Vec2(0,0));
+  //   Vec2 avoidDir = futurePos_id.minus(futurePos_j).normalized();
+  //   Vec2 avoidForce = avoidDir.times(1/(ttc+0.0001));
+  //   //println(ttc, avoidForce.x, avoidForce.y);
+  //   if (ttc > 0){
+  //     acc.add(avoidForce.times(k_avoid));
+  //     if(acc.x<0){
+  //       acc.x = max(-100,acc.x);
+  //     }
+  //     if(acc.x>0){
+  //       acc.x = min(100,acc.x);
+  //     }
+  //     if(acc.y<0){
+  //       acc.y = max(-100,acc.y);
+  //     }
+  //     if(acc.y>0){
+  //       acc.y = min(100,acc.y);
+  //     }
+  //   }
+  //   if (ttc==0){
+  //     acc.add(avoidForce.times(k_avoid));
+  //     if(acc.x<0){
+  //       acc.x = max(-100,acc.x);
+  //     }
+  //     if(acc.x>0){
+  //       acc.x = min(100,acc.x);
+  //     }
+  //     if(acc.y<0){
+  //       acc.y = max(-100,acc.y);
+  //     }
+  //     if(acc.y>0){
+  //       acc.y = min(100,acc.y);
+  //     }
+  //   }
+  // }
   
   return acc;
 }
