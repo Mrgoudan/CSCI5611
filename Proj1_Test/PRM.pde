@@ -1,3 +1,6 @@
+//author Zirui Chen 6713@umn.edu
+//author Haining Lan lanxx116@umn.edu
+
 //You will only be turning in this file
 //Your solution will be graded based on it's runtime (smaller is better), 
 //the optimality of the path you return (shorter is better), and the
