@@ -1,3 +1,6 @@
+//author Zirui Chen 6713@umn.edu
+//author Haining Lan lanxx116@umn.edu
+
 //You will only be turning in this file
 //Your solution will be graded based on it's runtime (smaller is better), 
 //the optimality of the path you return (shorter is better), and the
@@ -123,8 +126,8 @@ int closestStartNode(Vec2 start,Vec2 goal ,Vec2[] nodePos, int numNodes,Vec2[] c
     Vec2 dir = nodePos[i].minus(start).normalized();
     float distBetween = nodePos[i].distanceTo(start);
     hitInfo circleListCheck = rayCircleListIntersect(centers, radii, numObstacles, start, dir, distBetween);
-    if(!circleListCheck.hit &&dist+distToGoal<minDist+minDIstToGoal){
-      println(dist+distToGoal,minDist+minDIstToGoal);
+    if(!circleListCheck.hit &&dist+distToGoal<minDist+minDIstToGoal&neighbors[i].size()!=0){
+      // println(dist+distToGoal,minDist+minDIstToGoal);
       closestID = i;
       minDist = dist;
       minDIstToGoal = distToGoal;
@@ -144,7 +147,7 @@ int closestGoalNode(Vec2 start,Vec2 goal ,Vec2[] nodePos, int numNodes,Vec2[] ce
     Vec2 dir = nodePos[i].minus(goal).normalized();
     float distBetween = nodePos[i].distanceTo(goal);
     hitInfo circleListCheck = rayCircleListIntersect(centers, radii, numObstacles, goal, dir, distBetween);
-    if(!circleListCheck.hit &&dist+distToGoal<minDist+minDIstToGoal){
+    if(!circleListCheck.hit &&dist+distToGoal<minDist+minDIstToGoal&&neighbors[i].size()!=0){
       closestID = i;
       minDist = dist;
       minDIstToGoal = distToGoal;
@@ -158,9 +161,13 @@ ArrayList<Integer> planPath(Vec2 startPos, Vec2 goalPos, Vec2[] centers, float[]
   
   int startID = closestStartNode(startPos,goalPos, nodePos, numNodes,centers,radii,numObstacles);
   int goalID = closestGoalNode(startPos,goalPos, nodePos, numNodes,centers,radii,numObstacles);
-  
+  if(startID==-1||goalID==-1){
+    // println("cannot find");
+    path.add(0,-1);
+    return path;
+  }
   path = runAStar(nodePos, numNodes, startID, goalID);
-  println("path",path);
+  // println("path",path);
   
   return path;
 }
@@ -185,24 +192,25 @@ ArrayList<Integer> runAStar(Vec2[] nodePos, int numNodes, int startID, int goalI
   ArrayList<Integer> closedList = new ArrayList();
   ArrayList<Integer> openList = new ArrayList();
   for (int i = 0; i < numNodes; i++) { //Clear visit tags and parent pointers
-    visited[i] = false;
+    // visited[i] = false;
     parent[i] = -1; //No parent yet
   }
   float[] fValue = new float[numNodes]; 
   float[] gValue = new float[numNodes];
+  // println(startID,fValue);
   fValue[startID] = 0+nodePos[startID].distanceTo(nodePos[goalID]);
   gValue[startID] = 0;
-  visited[startID] = true;
+  // visited[startID] = true;
   openList.add(startID);
   // println("startID",startID);
   while(!openList.isEmpty()){
     int evaluate = peek(openList,fValue);
     if(evaluate == goalID){
-      println("Goal Found");
+      // println("Goal Found");
       break;
     }
     for(int i = 0;i<neighbors[evaluate].size();i++){
-      visited[neighbors[evaluate].get(i)] = true;
+      // visited[neighbors[evaluate].get(i)] = true;
       int node = neighbors[evaluate].get(i);
       float totalWeight = gValue[evaluate]+nodePos[evaluate].distanceTo(nodePos[node]);
       if(!openList.contains(node)&& !closedList.contains(node)){
@@ -228,6 +236,11 @@ ArrayList<Integer> runAStar(Vec2[] nodePos, int numNodes, int startID, int goalI
    }
   ArrayList<Integer> path = new ArrayList();
   int goal = goalID;
+  // print(parent);
+  // if(parent[goalID]==-1){
+  //   path.add(0,-1);
+  //   return path;
+  // }
   while(true){
     // println("goal",goal);
     if(parent[goal]!=-1){
@@ -247,7 +260,6 @@ ArrayList<Integer> runAStar(Vec2[] nodePos, int numNodes, int startID, int goalI
   return path;
   
 }
-
 //BFS (Breadth First Search)
 // ArrayList<Integer> runBFS(Vec2[] nodePos, int numNodes, int startID, int goalID){
 //   ArrayList<Integer> fringe = new ArrayList();  //New empty fringe

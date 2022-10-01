@@ -184,12 +184,15 @@ int peek(ArrayList<Integer> openList, float[] fValue){
 ArrayList<Integer> runAStar(Vec2[] nodePos, int numNodes, int startID, int goalID){
   ArrayList<Integer> closedList = new ArrayList();
   ArrayList<Integer> openList = new ArrayList();
+  
+  float[] fValue = new float[numNodes]; 
+  float[] gValue = new float[numNodes];
   for (int i = 0; i < numNodes; i++) { //Clear visit tags and parent pointers
+    // fValue[i] = 0;
+    // gValue[i] = 0;
     visited[i] = false;
     parent[i] = -1; //No parent yet
   }
-  float[] fValue = new float[numNodes]; 
-  float[] gValue = new float[numNodes];
   fValue[startID] = 0+nodePos[startID].distanceTo(nodePos[goalID]);
   gValue[startID] = 0;
   visited[startID] = true;
