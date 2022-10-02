@@ -171,7 +171,7 @@ void moveAgent(float dt){
       }else{
         dir.normalize();
         // agentVel[j] = dir.times(goalSpeed*dt);
-        agentVel[j].add(agentAcc[j].times(dt).times(0.7));
+        agentVel[j].add(agentAcc[j].times(dt));
         
       }
     if(abs(startingPos[j].x+agentVel[j].x-goalPosition[j].x)<3 && abs(startingPos[j].y+agentVel[j].y-goalPosition[j].y)<3){
