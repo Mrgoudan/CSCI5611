@@ -26,7 +26,7 @@ Vec2[] startingPos = new Vec2[maxNumNodes];
 Vec2[] firstPos = new Vec2[maxNumNodes];
 Vec2[] goalPosition = new Vec2[maxNumNodes];
 int numOfAgents = 0;
-Vec2 agentPos;
+Vec2 agentPos;r
 // Vec2 agentVel;
 float agentRad = 10;
 
@@ -171,14 +171,9 @@ void moveAgent(float dt){
       }else{
         dir.normalize();
         // agentVel[j] = dir.times(goalSpeed*dt);
-        agentVel[j].add(agentAcc[j].times(dt).times(0.7));
-        
+        agentVel[j].add(agentAcc[j].times(dt).times(0.8));
       }
-    if(abs(startingPos[j].x+agentVel[j].x-goalPosition[j].x)<3 && abs(startingPos[j].y+agentVel[j].y-goalPosition[j].y)<3){
-      startingPos[j] = goalPosition[j];
-    }
-    else{
-    startingPos[j].add(agentVel[j]);}
+    startingPos[j].add(agentVel[j]);
     
 
   }
@@ -204,7 +199,7 @@ void draw(){
     Vec2 c = circlePos[i];
     float r = circleRad[i] - agentRad;
     circle(c.x,c.y,r*2);
-    image(blackhole, c.x-r, c.y-r, r*2, r*2);
+    image(blackhole, circlePos[i].x-circleRad[i], circlePos[i].y-circleRad[i], circleRad[i]*2, circleRad[i]*2);
 
   }
   strokeWeight(1);
@@ -212,7 +207,7 @@ void draw(){
   Vec2 c = circlePos[0];
     float r = circleRad[0] - agentRad;
     circle(c.x,c.y,r*2);
-    image(huamn, c.x-r, c.y-r, r*2, r*2);
+    image(huamn, circlePos[0].x-circleRad[0], circlePos[0].y-circleRad[0], circleRad[0]*2, circleRad[0]*2);
 
     
   //Update agent if not paused
@@ -230,10 +225,9 @@ void draw(){
     fill(255,150,50);
     println(goalPosition[i].x,goalPosition[i].y,goalPos.x,goalPos.y,startingPos[i].x,startingPos[i].y);
     rect(goalPosition[i].x-10, goalPosition[i].y-10, 20, 20);
-    image(spaceship,goalPosition[i].x-10, goalPosition[i].y-10, 20, 20);
+    image(spaceship,goalPosition[i].x-8, goalPosition[i].y-8, 22, 22);
     fill(20,200,150);    
     circle(startingPos[i].x, startingPos[i].y, agentRad*2); 
-    image(aliean,startingPos[i].x-agentRad, startingPos[i].y-agentRad, agentRad*2,agentRad*2);
   }
    //No.4 smaller radius
    //Draw PRM Nodes
