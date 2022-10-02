@@ -136,6 +136,7 @@ void moveAgent(float dt){
     
     //shortcut design
     if(posPlace[j] < path.get(j).length - 1){
+
       Vec2 node2 = path.get(j)[posPlace[j]+1];
       Vec2 nextdir = node2.minus(startingPos[j]).normalized();
       float dist = node2.distanceTo(startingPos[j]);
@@ -146,7 +147,11 @@ void moveAgent(float dt){
         return;
       }    
     }
-    if(path.get(j).length != 1){
+    println("POSPLACE",posPlace[j]);
+    if(startingPos[j].x == goalPosition[j].x &&startingPos[j].y == goalPosition[j].y ){
+      continue;
+    }
+      print("in");
       agentAcc[j] = computeAgentForces(j);
 
       if(dir.length() < goalSpeed*dt){
@@ -158,7 +163,7 @@ void moveAgent(float dt){
         agentVel[j] = dir.times(goalSpeed*dt);
         agentVel[j].add(agentAcc[j].times(dt).times(0.5));
       }
-    startingPos[j].add(agentVel[j]);}
+    startingPos[j].add(agentVel[j]);
     
 
   }
@@ -198,7 +203,7 @@ void draw(){
 
   for(int i = 0;i<numOfAgents;i++){
     fill(255,150,50);
-    println(goalPosition[i].x,goalPosition[i].y);
+    println(goalPosition[i].x,goalPosition[i].y,goalPos.x,goalPos.y,startingPos[i].x,startingPos[i].y);
     rect(goalPosition[i].x-10, goalPosition[i].y-10, 20, 20);
     fill(20,200,150);    
     circle(startingPos[i].x, startingPos[i].y, agentRad*2); 
