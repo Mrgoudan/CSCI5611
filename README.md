@@ -7,6 +7,7 @@ We uses PRM and A star algorithm to calculate the path for our agent to reach ou
 When the path is found, the agent won't strictly follow the path. It can calculate whether there is a collision between the following node or not. If there is no collision between the agent and the following node, it will skip the current node and go towards the following node.
 ### 3. Resetting and pause simulation
 Press R to reset the simulation, press Space to pause the simulation
+<img src="reset and pause.gif" alt="drawing" width="50%"/> <br />
 ### 4. Adding agents:
 The user can add agent anywhere in the map by using the left click of their mouse. The new agent will be randomly given a goal point and PRM will calculate the path immediatly.
 <img src="multiagent.gif" alt="drawing" width="50%"/> <br />
