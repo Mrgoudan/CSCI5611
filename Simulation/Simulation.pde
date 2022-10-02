@@ -420,6 +420,20 @@ void mousePressed(){
   path  = new ArrayList(numNodes);
   for(int j = 0;j<numOfAgents;j++){
     nodes = planPath(startingPos[j], goalPosition[j], circlePos, circleRad, numObstacles, nodePos, numNodes);
+    if(nodes.get(0)==-1){
+      while(nodes.get(0)==-1){
+      agentPos= sampleFreePos();
+      startPos = new Vec2(agentPos.x, agentPos.y);
+      startingPos[j]=startPos;
+      firstPos[j] = startPos;
+      // numOfAgents= numOfAgents+1;
+      goalPos = sampleFreePos();
+      goalPosition[j] = goalPos;
+      nodes = planPath(startingPos[j], goalPosition[j], circlePos, circleRad, numObstacles, nodePos, numNodes);
+
+      }
+
+    }
     println(nodes);
     Vec2 [] temp1 =  new Vec2[nodes.size()+1];
     path.add(temp1);
