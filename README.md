@@ -10,4 +10,5 @@ The user can add agent anywhere in the map by using the left click of their mous
 When there are multiple agents on the map, and they are about to collide, the TTC can provide forces to pull them away and also make sure they don't collide with the obstacle.<br />
 
 # Difficulties
-1. The lack of data structures: the initial design of how to store the path was using JAVA's linkedlist. When the agent gets to a node, we use the linkedlist removefirst() method to pop the node. But, Processing did not inherit this JAVA structure,so, we have to use ArrayList to store the path and use indexes to keep track the nodes.<br />
+### 1. The lack of data structures:
+the initial design of how to store the path was using JAVA's linkedlist. When the agent gets to a node, we use the linkedlist removefirst() method to pop the node. But, Processing did not inherit this JAVA structure,so, we have to use ArrayList to store the path and use indexes to keep track the nodes.<br />
