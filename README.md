@@ -1,5 +1,5 @@
 #  Features
-
+<img src="pathfinding.gif" alt="drawing" width="50%"/> <br />
 1. Path finding: We uses PRM and A star algorithm to calculate the path for our agent to reach our goal. <br />
 2. Shortcut Design: When the path is found, the agent won't strictly follow the path. It can calculate whether there is a collision between the following node or not. If there is no collision between the agent and the following node, it will skip the current node and go towards the following node.<br />
 3. Adding agents: The user can add agent anywhere in the map by using the left click of their mouse. The new agent will be randomly given a goal point and PRM will calculate the path immediatly.<br />
