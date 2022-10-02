@@ -10,6 +10,7 @@ Press R to reset the simulation, press Space to start and pause the simulation
 <img src="reset and pause.gif" alt="drawing" width="50%"/> <br />
 ### 4. Adding agents:
 The user can add agent anywhere in the map by using the left click of their mouse. The new agent will be randomly given a goal point and PRM will calculate the path immediatly.
+
 <img src="multiagent.gif" alt="drawing" width="50%"/> <br />
 ### 5. TTC crowd simulation:
 When there are multiple agents on the map, and they are about to collide, the TTC can provide forces to pull them away and also make sure they don't collide with the obstacle.
