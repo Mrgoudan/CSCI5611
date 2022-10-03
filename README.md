@@ -19,4 +19,5 @@ When there are multiple agents on the map, and they are about to collide, the TT
 ### 1. The lack of data structures:
 the initial design of how to store the path was using JAVA's linkedlist. When the agent gets to a node, we use the linkedlist removefirst() method to pop the node. But, Processing did not inherit this JAVA structure, so, we have to use ArrayList to store the path and use indexes to keep track the nodes.
 
-
+### 2. The pass by reference problem
+In the first version of our program, when the agent reaches the goal, the agent can't stop, but also carry the goal point forward. We found that it is because we set the agentPos = goalPos. Because it is passed by reference, so the agentPos points to the goalPos. Also, the velocity vector is not set to zero, thus, the agent won't stop when it reaches the goal, and the goal will move along with the agent. We solve this by making the agentPos = new vec2(goalPos.x, goalPos.y).
