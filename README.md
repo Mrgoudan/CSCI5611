@@ -21,3 +21,10 @@ the initial design of how to store the path was using JAVA's linkedlist. When th
 
 ### 2. The pass by reference problem
 In the first version of our program, when the agent reaches the goal, the agent can't stop, but also carry the goal point forward. We found that it is because we set the agentPos = goalPos. Because it is passed by reference, so the agentPos points to the goalPos. Also, the velocity vector is not set to zero, thus, the agent won't stop when it reaches the goal, and the goal will move along with the agent. We solve this by making the agentPos = new vec2(goalPos.x, goalPos.y).
+
+# Art Sources
+blackhole: https://astronomy.com/news/2022/07/star-discovered-orbiting-milky-ways-supermassive-black-hole-every-4-years
+human https://www.ign.com/games/starcraft-ii-wings-of-liberty
+aliean https://www.istockphoto.com/photos/alien-eyes
+space ship https://wallpaperaccess.com/sci-fi-ship
+space https://physicsworld.com/a/fifth-force-could-explain-puzzling-orbits-of-dwarf-galaxies/
