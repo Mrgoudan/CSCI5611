@@ -9,17 +9,20 @@ Agents are render with images. All images repersents obstales are shaped into ci
 
 ### 3. User Scenario Editing:
 Press R to reset the simulation, press Space to start and pause the simulation. The user can add agent anywhere in the map by using the left click of their mouse. The new agent will be randomly given a goal point and PRM will calculate the path immediatly.
-<img src="reset and pause.gif" alt="drawing" width="50%"/> <br />
+<img src="UserEdit.gif" alt="drawing" width="50%"/> <br />
 
 ### 4. Realtime User Interation:
 With arrows key, One obstacle with the image of human can be moved around the map. The goal of this obstacle is to intercept "aliens" from returning to their spaceship. under the circumstance that the path aliean has no longer works, new path will ben generated(aliean will try to find a new path back to its spaceship).
-
-<img src="multiagent.gif" alt="drawing" width="50%"/> <br />
+<img src="realtime1.gif" alt="drawing" width="50%"/> <br />
+<img src="realtime2.gif" alt="drawing" width="50%"/> <br />
 
 ### 5. Multiple Agent Planing:
 with left click, "alieans" can be added to the map. their designate spaceship will be randomly generated. under the circumstance that there are no path from aliean's position to its ship, random aliean and spaceship position will be genarated. all existing alieans will move to their designate spaceship simultaneously.  
+<img src="multiagent.gif" alt="drawing" width="50%"/> <br />
+
 ### 6. TTC crowd simulation:
 When there are multiple agents on the map, and they are about to collide, the TTC can provide forces to pull them away and also make sure they don't collide with the obstacle.
+<img src="TTC.gif" alt="drawing" width="50%"/> <br />
 # Tools and Library used:
 No tools and libraies are used besides what's provided to us. 
 # Difficulties
